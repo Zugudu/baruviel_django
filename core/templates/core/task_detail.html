@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+<a href='/task/give' class='w3-button w3-blue w3-hover-red w3-margin-bottom' style='width:300px;'>Доручити завдання</a>
+<table class='w3-container w3-card w3-table w3-bordered' style='width:800px;'>
+<tr>
+	<td colspan={% if task.who.id == request.user.id %}5{% else %}4{% endif %} class='w3-center'>
+		<h3>{{ task.name }}</h3>
+	</td>
+</tr>
+<tr class='w3-pale-yellow'>
+	<td class='w3-border-right'><h4>Завдання</h4></td>
+	<td class='w3-border-right'><h4>Відповідальний</h4></td>
+	<td class='w3-border-right'><h4>Стан</h4></td>
+	<td class='w3-border-right'></td>
+	{% if task.who.id == request.user.id %}
+		<td class='w3-border-right'></td>
+	{% endif %}
+</tr>
+{% for el in task.subtask_set.all %}
+	<tr>
+		<td class='w3-border-right'><h4>{{ el.name }}</h4></td>
+		<td class='w3-border-right'><h4>{{ el.whom.get_short_name }}</h4></td>
+		<td class='w3-border-right'>
+			<h4>
+				<img src='
+{% if el.done %}
+{% static "core/ico/done.svg" %}
+{% else %}
+{% static "core/ico/quest.svg" %}
+{% endif %}
+				' width=32 height=32>
+			</h4>
+		</td>
+		<td class='w3-border-right'></td>
+		{% if owned %}
+			<td class='w3-border-right'></td>
+		{% endif %}
+	</tr>
+{% endfor %}
+</table>
+{% if task.who.id == request.user.id %}
+<br><a href='/task/give' class='w3-button w3-blue w3-hover-red w3-margin-bottom' style='width:300px;'>Змінити завдання</a><br>
+<a href='/task/give' class='w3-button w3-blue w3-hover-red w3-margin-bottom' style='width:300px;'>Видалити завдання</a>
+{% endif %}
+{% endblock content %}

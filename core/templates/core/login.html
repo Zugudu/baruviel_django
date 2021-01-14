@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% block content %}
+{% if error %}
+<div class="w3-container w3-red w3-padding">{{ error }}</div>
+{% endif %}
+<form method=POST action="{% url 'login' %}" class='w3-container w3-card w3-padding w3-margin' style='width:300px;'>
+{% csrf_token %}
+<label>Лоґін</label>
+<input name='login' type='text' placeholder='Лоґін' class='w3-input' required>
+<label>Пароль</label>
+<input name='pass' type='password' placeholder='Пароль' class='w3-input' required>
+<button class='w3-btn w3-black w3-block w3-margin-top' type='submit'>Увійти</button>
+</form>
+{% endblock content %}

@@ -9,6 +9,7 @@ class Task(models.Model):
 	class Meta:
 		verbose_name='Ціль'
 		verbose_name_plural='Цілі'
+		permissions = [('are_staff', 'Є частиною Лісових Чортів'),]
 
 	def __str__(self):
 		return self.name

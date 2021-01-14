@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+<table class='w3-container w3-card w3-table w3-bordered' style='width:800px;'>
+<tr>
+<td colspan=4 class='w3-center'><h3>Останні завдання</h3></td>
+</tr>
+<tr class='w3-pale-yellow'>
+<td class='w3-border-right'><h4>Ціль</h4></td>
+<td class='w3-border-right'><h4>Відповідальний</h4></td>
+<td class='w3-border-right'><h4>Стан</h4></td>
+<td class='w3-border-right'></td>
+</tr>
+{% for el in context %}
+	<tr>
+		<td class="w3-border-right">{{ el.task.name }}</td>
+		<td class="w3-border-right">{{ el.task.who.first_name }}</td>
+		<td class="w3-border-right">
+			<img src='
+			{% if el.status %}
+			{% static "core/ico/done.svg" %}
+			{% else %}
+			{% static "core/ico/quest.svg" %}
+			{% endif %}
+			' width=32 height=32>
+		</td>
+		<td><a href="{% url 'task' el.task.id %}" class="w3-button w3-black w3-hover-light-gray w3-block">Більше</a></td>
+	</tr>
+{% endfor %}
+</table>
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% load static %}
+<html>
+<head>
+<meta charset=utf8>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="{% static "core/ico/logo.png" %}">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="{% static "core/css/chart.css" %}">
+<title>Барувіель</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class='w3-bar w3-blue w3-margin-bottom'>
+<a href='/'><div class='w3-bar-item w3-hover-red'>Привіт {{ user.get_short_name }}</div></a>
+<a href='/task/list/whom/{1}'><div class='w3-bar-item w3-hover-red'>Отримані завдання</div></a>
+<a href='/task/list/who/{1}'><div class='w3-bar-item w3-hover-red'>Доручені завдання</div></a>
+{% if perms.core.are_staff %}
+<a href='/stat'><div class='w3-bar-item w3-hover-red'>Статистика сайту</div></a>
+<a href='/stat_c'><div class='w3-bar-item w3-hover-red'>Графіки</div></a>
+{% endif %}
+<a href='{% url 'logout' %}'><div class='w3-bar-item w3-hover-red'>Вийти</div></a>
+</div>
+{% endif %}
+<center>
+{% block content %}{% endblock content %}
+</center>
+</body>
+</html>

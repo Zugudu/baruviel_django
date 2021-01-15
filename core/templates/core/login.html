@@ -10,5 +10,8 @@
 <label>Пароль</label>
 <input name='pass' type='password' placeholder='Пароль' class='w3-input' required>
 <button class='w3-btn w3-black w3-block w3-margin-top' type='submit'>Увійти</button>
+{% if next %}
+<input type="hidden" name="next" value="{{ next }}">
+{% endif %}
 </form>
 {% endblock content %}

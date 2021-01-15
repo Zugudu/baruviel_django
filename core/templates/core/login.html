@@ -1,8 +1,5 @@
 {% extends "core/base.html" %}
 {% block content %}
-{% if error %}
-<div class="w3-container w3-red w3-padding">{{ error }}</div>
-{% endif %}
 <form method=POST action="{% url 'login' %}" class='w3-container w3-card w3-padding w3-margin' style='width:300px;'>
 {% csrf_token %}
 <label>Лоґін</label>

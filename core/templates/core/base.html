@@ -10,8 +10,9 @@
 </head>
 <body>
 {% if user.is_authenticated %}
-<div class='w3-bar w3-blue w3-margin-bottom'>
+<div class='w3-bar w3-blue {% if not error %} w3-margin-bottom{% endif %}'>
 <a href='/'><div class='w3-bar-item w3-hover-red'>Привіт {{ user.get_short_name }}</div></a>
+<a href='{% url "task_new" %}'><div class='w3-bar-item w3-hover-red'>Нова ціль</div></a>
 <a href='/task/list/whom/{1}'><div class='w3-bar-item w3-hover-red'>Отримані завдання</div></a>
 <a href='/task/list/who/{1}'><div class='w3-bar-item w3-hover-red'>Доручені завдання</div></a>
 {% if perms.core.are_staff %}
@@ -22,6 +23,9 @@
 </div>
 {% endif %}
 <center>
+{% if error %}
+<div class="w3-container w3-red w3-padding w3-margin-bottom">{{ error }}</div>
+{% endif %}
 {% block content %}{% endblock content %}
 </center>
 </body>

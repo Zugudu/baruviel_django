@@ -4,7 +4,7 @@
 	Need future rework
 [x] Login/Logout
 [x] New task
-[ ] Task edit
+[x] Task edit
 [x] Task remove
 [ ] New Subtask
 [ ] Subtask detail

@@ -11,18 +11,22 @@ from . import models
 from . import forms
 
 
-def login_page(request):
-	if request.method == 'POST':
+class LoginPage(View):
+	def get(self, request):
+		next = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
+		return render(request, 'core/login.html', {'next': next})
+
+	def post(self, request):
+		next = request.POST.get('next', settings.LOGIN_REDIRECT_URL)
 		try:
 			user = authenticate(request, username=request.POST['login'], password=request.POST['pass'])
 			if user is None:
 				return render(request, 'core/login.html', {'error': 'Невірні вхідні дані'})
 			else:
 				login(request, user)
-				return HttpResponseRedirect(request.POST.get('next', settings.LOGIN_REDIRECT_URL))
+				return HttpResponseRedirect(next)
 		except KeyError:
-			pass
-	return render(request, 'core/login.html', {'next': request.GET.get('next', settings.LOGIN_REDIRECT_URL)})
+			return render(request, 'core/login.html', {'next': next})
 
 
 def logout_page(request):
@@ -38,6 +42,7 @@ def index(request):
 		for j in i.subtask_set.all():
 			if not j.done:
 				status = False
+				break
 		context.append({'status': status, 'task': i})
 	return render(request, 'core/task_list.html', {'context': context})
 
@@ -65,7 +70,8 @@ class TaskNew(LoginRequiredMixin, View):
 	def post(self, request):
 		form = forms.TaskNew(request.POST)
 		if form.is_valid():
-			task = models.Task(name=form.cleaned_data['name'], who=request.user)
+			task = form.save(commit=False)
+			task.who = request.user
 			task.save()
 			return HttpResponseRedirect(reverse('task', args=[task.id]))
 		else:

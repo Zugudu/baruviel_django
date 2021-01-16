@@ -76,7 +76,7 @@ def task_delete(request, pk):
 class TaskNew(LoginRequiredMixin, View):
 	def get(self, request):
 		form = forms.TaskNew()
-		return render(request, 'core/new_task.html', {'form': form})
+		return render(request, 'core/task_new.html', {'form': form})
 
 	def post(self, request):
 		form = forms.TaskNew(request.POST)
@@ -86,4 +86,15 @@ class TaskNew(LoginRequiredMixin, View):
 			task.save()
 			return HttpResponseRedirect(reverse('task', args=[task.id]))
 		else:
-			return render(request, 'core/new_task.html', {'form': form, 'error': 'Дані форми введено не вірно'})
+			return render(request, 'core/task_new.html', {'form': form, 'error': 'Дані форми введено не вірно'})
+
+
+class TaskEdit(LoginRequiredMixin, View):
+	def get(self, request, pk):
+		task = get_object_or_404(models.Task, pk=pk)
+		if request.user.id == task.who.id:
+			form = forms.TaskNew(instance=task)
+			return render(request, 'core/task_edit.html', {'form': form})
+		else:
+			# TODO log this shit
+			return HttpResponseRedirect(reverse('index'))

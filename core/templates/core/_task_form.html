@@ -3,6 +3,8 @@
 <form action="{% url 'task_new' %}" method="POST" class='w3-container w3-card w3-padding w3-margin' style='width:300px;'>
 	{% csrf_token %}
 	{{ form }}
-	<button class='w3-btn w3-black w3-block w3-margin-top' type='submit'>Створити нове завдання</button>
+	<button class='w3-btn w3-black w3-block w3-margin-top' type='submit'>
+	{% block submit %}{% endblock submit %}
+	</button>
 </form>
 {% endblock content %}

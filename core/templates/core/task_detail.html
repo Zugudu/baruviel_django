@@ -40,7 +40,7 @@
 {% endfor %}
 </table>
 {% if task.who.id == request.user.id %}
-<br><a href='/task/give' class='w3-button w3-blue w3-hover-red w3-margin-bottom' style='width:300px;'>Змінити завдання</a><br>
+<br><a href='{% url "task_edit" task.id %}' class='w3-button w3-blue w3-hover-red w3-margin-bottom' style='width:300px;'>Змінити завдання</a><br>
 <a href="{% url 'task_delete' task.id %}" class='w3-button w3-blue w3-hover-red w3-margin-bottom' style='width:300px;'>Видалити завдання</a>
 {% endif %}
 {% endblock content %}

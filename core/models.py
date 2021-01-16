@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Task(models.Model):
-	name = models.CharField(max_length=20, verbose_name='Назва')
+	name = models.CharField(max_length=50, verbose_name='Назва цілі')
 	who = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Ким видане')
 
 	class Meta:
@@ -16,7 +16,7 @@ class Task(models.Model):
 
 
 class Subtask(models.Model):
-	name = models.TextField(verbose_name='Назва')
+	name = models.TextField(verbose_name='Назва завдання')
 	whom = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Кому видане')
 	done = models.BooleanField(verbose_name='Статус виконання')
 	task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name='Належить до цілі')

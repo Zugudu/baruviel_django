@@ -1,5 +1,4 @@
-from django.shortcuts import render, reverse, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -34,7 +33,7 @@ class LoginPage(View):
 					})
 				else:
 					login(request, user)
-					return HttpResponseRedirect(next)
+					return redirect(next)
 			except KeyError:
 				pass
 		return render(request, 'core/login.html', {'next': next, 'form': form})
@@ -42,7 +41,7 @@ class LoginPage(View):
 
 def logout_page(request):
 	logout(request)
-	return HttpResponseRedirect(settings.LOGIN_URL)
+	return redirect(settings.LOGIN_URL)
 
 
 @login_required()
@@ -70,21 +69,21 @@ def task_delete(request, pk):
 	# else:
 	# 	log_this_shit
 	# TODO: make logging
-	return HttpResponseRedirect(request.GET.get('next', reverse('index')))
+	return redirect(request.GET.get('next', reverse('index')))
 
 
 class TaskNew(LoginRequiredMixin, View):
 	def get(self, request):
-		form = forms.TaskNew()
+		form = forms.TaskNew(label_suffix='')
 		return render(request, 'core/task_new.html', {'form': form})
 
 	def post(self, request):
-		form = forms.TaskNew(request.POST)
+		form = forms.TaskNew(request.POST, label_suffix='')
 		if form.is_valid():
 			task = form.save(commit=False)
 			task.who = request.user
 			task.save()
-			return HttpResponseRedirect(reverse('task', args=[task.id]))
+			return redirect('task', task.id)
 		else:
 			return render(request, 'core/task_new.html', {'form': form, 'error': 'Дані форми введено не вірно'})
 
@@ -93,8 +92,21 @@ class TaskEdit(LoginRequiredMixin, View):
 	def get(self, request, pk):
 		task = get_object_or_404(models.Task, pk=pk)
 		if request.user.id == task.who.id:
-			form = forms.TaskNew(instance=task)
-			return render(request, 'core/task_edit.html', {'form': form})
+			form = forms.TaskNew(instance=task, label_suffix='')
+			return render(request, 'core/task_edit.html', {'form': form, 'pk': pk})
 		else:
 			# TODO log this shit
-			return HttpResponseRedirect(reverse('index'))
+			return redirect('task', task.id)
+
+	def post(self, request, pk):
+		task = get_object_or_404(models.Task, pk=pk)
+		if request.user.id == task.who.id:
+			form = forms.TaskNew(request.POST, instance=task, label_suffix='')
+			if form.is_valid():
+				form.save()
+				return redirect('task', task.id)
+			else:
+				return render(request, 'core/task_edit.html', {'form': form, 'pk': pk})
+		else:
+			# TODO log this shit
+			return redirect('task', task.id)

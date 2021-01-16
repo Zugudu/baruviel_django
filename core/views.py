@@ -13,20 +13,31 @@ from . import forms
 
 class LoginPage(View):
 	def get(self, request):
+		form = forms.LoginPage()
 		next = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
-		return render(request, 'core/login.html', {'next': next})
+		return render(request, 'core/login.html', {'next': next, 'form': form})
 
 	def post(self, request):
+		form = forms.LoginPage(request.POST)
 		next = request.POST.get('next', settings.LOGIN_REDIRECT_URL)
-		try:
-			user = authenticate(request, username=request.POST['login'], password=request.POST['pass'])
-			if user is None:
-				return render(request, 'core/login.html', {'error': 'Невірні вхідні дані'})
-			else:
-				login(request, user)
-				return HttpResponseRedirect(next)
-		except KeyError:
-			return render(request, 'core/login.html', {'next': next})
+		if form.is_valid():
+			try:
+				user = authenticate(request,
+					username=form.cleaned_data.get('login'),
+					password=form.cleaned_data.get('password')
+				)
+				if user is None:
+					return render(request, 'core/login.html', {
+						'error': 'Невірні вхідні дані',
+						'form': form,
+						'next': next
+					})
+				else:
+					login(request, user)
+					return HttpResponseRedirect(next)
+			except KeyError:
+				pass
+		return render(request, 'core/login.html', {'next': next, 'form': form})
 
 
 def logout_page(request):

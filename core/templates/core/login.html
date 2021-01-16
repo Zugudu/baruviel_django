@@ -2,13 +2,10 @@
 {% block content %}
 <form method=POST action="{% url 'login' %}" class='w3-container w3-card w3-padding w3-margin' style='width:300px;'>
 {% csrf_token %}
-<label>Лоґін</label>
-<input name='login' type='text' placeholder='Лоґін' class='w3-input' required>
-<label>Пароль</label>
-<input name='pass' type='password' placeholder='Пароль' class='w3-input' required>
+{{ form }}
 <button class='w3-btn w3-black w3-block w3-margin-top' type='submit'>Увійти</button>
 {% if next %}
 <input type="hidden" name="next" value="{{ next }}">
 {% endif %}
 </form>
-{% endblock content %}
+ {% endblock content %}
